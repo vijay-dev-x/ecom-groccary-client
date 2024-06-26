@@ -57,12 +57,6 @@ export default function Navbar() {
             Contact
           </NavLink>
           <NavLink
-            to={"/manu"}
-            className={({ isActive }) => `${isActive && "text-green-600"}`}
-          >
-            Manu
-          </NavLink>
-          <NavLink
             to={"/about"}
             className={({ isActive }) => `${isActive && "text-green-600"}`}
           >

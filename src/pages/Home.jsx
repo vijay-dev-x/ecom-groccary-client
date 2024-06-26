@@ -7,7 +7,7 @@ export default function Home() {
   const selectorProducts = useSelector((state) => state.store.products);
   console.log("selector home", selectorProducts);
   return (
-    <div>
+    <div className=" pt-10">
       <RightSidebar></RightSidebar>
       <div className=" container mx-auto flex md:flex-row flex-col gap-4 justify-between">
         <div className=" flex max-w-xl flex-col gap-5">
