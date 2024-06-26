@@ -31,7 +31,7 @@ export default function FilterProducts() {
           </div>
         ))}
       </div>
-      <div className=" my-10 flex flex-wrap mx-auto justify-center w-full grid-cols-4 gap-7 ">
+      <div className=" my-10 grid grid-cols-2 md:grid-cols-3 flex-wrap mx-auto justify-center w-full  gap-7 ">
         {selectorProducts
           ?.filter((value) => value.category === filterCategory)
           .map((value, index) => (

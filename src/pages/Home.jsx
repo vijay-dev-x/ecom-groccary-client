@@ -36,7 +36,7 @@ export default function Home() {
                 className=" flex flex-col justify-center items-center"
                 key={value._id}
               >
-                <img className=" max-w-[220px]" src={value.image} alt="" />
+                <img className=" max-w-[170px]" src={value.image} alt="" />
                 <p className=" text-sm text-gray-600/80 ">{value.category}</p>
                 <p className=" text-sm whitespace-nowrap md:text-lg font-semibold ">
                   {value.name}

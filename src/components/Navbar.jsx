@@ -2,10 +2,13 @@ import {
   Badge,
   CirclePlus,
   CircleUser,
+  Headset,
+  LogIn,
   LogOut,
   PlusCircle,
   ShoppingBasket,
   ShoppingCart,
+  Store,
   Verified,
 } from "lucide-react";
 import React, { useState } from "react";
@@ -64,17 +67,6 @@ export default function Navbar() {
           </NavLink>
         </div>
 
-        <div>
-          {localEmail ? (
-            ""
-          ) : (
-            <Link to={"/signin"}>
-              <button className="bg-green-600 rounded-md px-4 py-2 font-semibold text-white">
-                Login
-              </button>
-            </Link>
-          )}
-        </div>
         <div className="relative">
           <ShoppingCart
             onClick={toggleCartSidebar}
@@ -104,12 +96,29 @@ export default function Navbar() {
                   </p>
                 </NavLink>
               )}
-              <button
-                onClick={logoutHandler}
-                className="text-red-600 font-semibold flex gap-2"
-              >
-                <LogOut></LogOut> logout
-              </button>
+
+              <div>
+                {localEmail ? (
+                  <button
+                    onClick={logoutHandler}
+                    className="text-red-600 font-semibold flex gap-2"
+                  >
+                    <LogOut></LogOut> logout
+                  </button>
+                ) : (
+                  <Link to={"/signin"}>
+                    <div className=" flex gap-2 hover:scale-105 transition-all text-green-700 rounded-md px-4 font-semibold">
+                      <LogIn></LogIn> Login
+                    </div>
+                  </Link>
+                )}
+              </div>
+              <Link to={"/contact"} className=" flex gap-2">
+                <Headset></Headset> Contact
+              </Link>
+              <Link to={"/about"} className=" flex gap-2">
+                <Store></Store> About
+              </Link>
             </div>
           )}
         </div>

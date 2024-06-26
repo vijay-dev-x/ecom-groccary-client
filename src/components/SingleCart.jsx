@@ -8,19 +8,23 @@ export default function SingleCart({ value }) {
     dispatch(setCardProducts(item));
   };
   return (
-    <div className=" flex flex-col border gap-1 w-[250px]  min-h-[250px] p-3 rounded-sm shadow-md">
+    <div className=" flex flex-col border gap-1  w-[160px] md:w-[250px]  min-h-[250px] max-h-[390px] p-2 md:p-3 rounded-sm shadow-md">
       <Link
         to={`/manu/${value._id}`}
         className=" flex justify-center flex-col items-center h-full w-full"
       >
-        <img className=" h-[90%] w-[90%]" src={value.image} alt="" />
-        <p className=" text-gray-600/80">{value.category}</p>
+        <img
+          className="  h-[60%] md:h-[90%] md:w-[90%] w-[60%] "
+          src={value.image}
+          alt=""
+        />
+        <p className=" text-xs text-gray-600/80">{value.category}</p>
       </Link>
       <div>
-        <p className=" text-neutral-800 text-center text-lg font-semibold">
+        <p className=" text-sm text-neutral-800 text-center md:text-lg font-semibold">
           {value.name}
         </p>
-        <div className=" flex px-2 items-center justify-between mt-2">
+        <div className=" flex flex-col md:flex-row gap-1 px-2 items-center justify-between mt-2">
           <p className=" text-green-700 text-[18px] font-bold">
             &#8377; {value.price}
           </p>
