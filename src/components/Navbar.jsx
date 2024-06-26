@@ -1,21 +1,18 @@
 import {
-  Badge,
   CirclePlus,
   CircleUser,
   Headset,
   LogIn,
   LogOut,
-  PlusCircle,
-  ShoppingBasket,
   ShoppingCart,
   Store,
   Verified,
 } from "lucide-react";
-import React, { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import Carts from "./Carts";
 import { useSelector } from "react-redux";
 import CartSidebar from "../components/RightSidebar.jsx"; // Import the new sidebar component
+
 const logo = "/logo.png";
 
 export default function Navbar() {
@@ -33,6 +30,22 @@ export default function Navbar() {
   const toggleCartSidebar = () => {
     setOpenCart(!openCart);
   };
+
+  // Ref for the user menu
+  const userMenuRef = useRef();
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setOpenUser(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [userMenuRef]);
 
   return (
     <div className="flex z-10 bg-white justify-between items-center fixed top-0 py-4 shadow-md px-4 w-full">
@@ -83,7 +96,10 @@ export default function Navbar() {
         >
           <CircleUser></CircleUser>
           {openUser && (
-            <div className="absolute border rounded top-10 bg-white py-3 px-2 min-w-[150px] max-w-[200px] flex flex-col gap-3 right-5">
+            <div
+              ref={userMenuRef}
+              className="absolute border rounded top-10 bg-white py-3 px-2 min-w-[150px] max-w-[200px] flex flex-col gap-3 right-5"
+            >
               {import.meta.env.VITE_ADMIN_EMAIL === localEmail && (
                 <NavLink
                   to={"/upload-product"}
