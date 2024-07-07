@@ -25,10 +25,23 @@ export const productSlice = createSlice({
         (item) => item._id !== product._id
       );
     },
+    updateCartQuantity: (state, action) => {
+      const product = action.payload;
+      const productIndex = state.cartProduct.findIndex(
+        (item) => item._id === product._id
+      );
+      if (productIndex >= 0) {
+        state.cartProduct[productIndex].quantity = product.quantity;
+      }
+    },
   },
 });
 
-export const { setProducts, setCardProducts, setRemoveCart } =
-  productSlice.actions;
+export const {
+  setProducts,
+  setCardProducts,
+  setRemoveCart,
+  updateCartQuantity,
+} = productSlice.actions;
 
 export default productSlice.reducer;

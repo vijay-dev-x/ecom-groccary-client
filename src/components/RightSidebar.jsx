@@ -1,18 +1,108 @@
-// CartSidebar.js
-
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Cross, X, XCircleIcon } from "lucide-react";
+import { XCircleIcon } from "lucide-react";
 import { setRemoveCart } from "../redux/slicer";
 import toast from "react-hot-toast";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 const CartSidebar = ({ isOpen, toggleSidebar }) => {
   const selectorCart = useSelector((state) => state.store.cartProduct);
   const totalPrice = selectorCart.reduce((acc, item) => acc + item.price, 0);
-  //   console.log("totelPrice", totalPrice);
+  const [quantities, setQuantities] = useState(
+    selectorCart.reduce((acc, item) => {
+      acc[item._id] = 1;
+      return acc;
+    }, {})
+  );
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
+
   const removeItemHandler = (value) => {
     dispatch(setRemoveCart(value));
     toast.success("Item Removed");
+  };
+
+  const incrementHandler = (item) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [item._id]: (prevQuantities[item._id] || 1) + 1,
+    }));
+  };
+
+  const decrementHandler = (item) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [item._id]: (prevQuantities[item._id] || 1) - 1,
+    }));
+  };
+
+  const checkoutHandler = async (amount, name) => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/product/checkout`,
+        { name, amount }
+      );
+      console.log("payment rs", res.data.order);
+
+      if (!res.data) {
+        throw new Error("Error in opening checkout");
+      }
+
+      const options = {
+        key: "rzp_test_cbyH4f86zT04hm",
+        amount: res.data.order.amount,
+        currency: res.data.order.currency,
+        name: "Acme Corp",
+        description: "Test Transaction",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRHk5KmIOlDEE1jdShNCGvdVvvDyUvZpj4Bg&s",
+        order_id: res.data.order.id,
+        handler: async (response) => {
+          // This function handles the successful payment
+          const paymentData = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+          };
+
+          try {
+            const verifyRes = await axios.post(
+              `${
+                import.meta.env.VITE_API_URL
+              }/api/product/payment-varification`,
+              paymentData
+            );
+            navigate(`/success?payment_id=${response.razorpay_order_id}`);
+          } catch (error) {
+            console.error("Payment Verification Error:", error);
+          }
+        },
+        prefill: {
+          name: "Gaurav Kumar",
+          email: "gaurav.kumar@example.com",
+          contact: "9000090000",
+        },
+        notes: {
+          address: "Razorpay Corporate Office",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      let rzp1 = new window.Razorpay(options);
+      rzp1.on("payment.failed", function (response) {
+        navigate(`/failed`);
+        // alert("Payment Failed: " + response.error.description);
+        rzp1.close();
+      });
+      rzp1.open();
+    } catch (error) {
+      alert("Oops! Something went wrong.\nError in opening checkout");
+      console.log("Error:", error);
+    }
   };
 
   return (
@@ -44,11 +134,21 @@ const CartSidebar = ({ isOpen, toggleSidebar }) => {
                   <p className=" text-green-700 font-semibold ">
                     &#8377; {value.price}
                   </p>
+                  <div className="flex gap-2 py-1 px-2 border justify-between w-[7rem] mt-1 rounded">
+                    <button
+                      onClick={() => decrementHandler(value)}
+                      disabled={quantities[value._id] === 1}
+                    >
+                      -
+                    </button>
+                    <p>{quantities[value._id]}</p>
+                    <button onClick={() => incrementHandler(value)}>+</button>
+                  </div>
                   <div
                     onClick={() => removeItemHandler(value)}
                     className=" hover:scale-110 transition-all absolute top-[-5px] right-[5px] text-red-700 cursor-pointer"
                   >
-                    <X></X>
+                    <XCircleIcon></XCircleIcon>
                   </div>
                 </div>
               </div>
@@ -62,7 +162,10 @@ const CartSidebar = ({ isOpen, toggleSidebar }) => {
               </p>
             </div>
             <div>
-              <button className=" w-[95%] mx-auto py-2 hover:bg-green-700 text-white font-semibold bg-green-600 rounded ">
+              <button
+                onClick={() => checkoutHandler(totalPrice, "Demo items")}
+                className=" w-[95%] mx-auto py-2 hover:bg-green-700 text-white font-semibold bg-green-600 rounded "
+              >
                 Checkout
               </button>
             </div>

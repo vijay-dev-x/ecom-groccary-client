@@ -7,6 +7,8 @@ import Manu from "./pages/Manu.jsx";
 import SignIn from "./pages/Signin.jsx";
 import SignUp from "./pages/Signup.jsx";
 import UploadProduct from "./pages/UploadProduct.jsx";
+import Failed from "./pages/Failed.jsx";
+import Success from "./pages/Success.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -41,6 +43,14 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignUp></SignUp>,
+  },
+  {
+    path: "/failed",
+    element: <Failed></Failed>,
+  },
+  {
+    path: "/success",
+    element: <Success></Success>,
   },
 ]);
 export default router;
