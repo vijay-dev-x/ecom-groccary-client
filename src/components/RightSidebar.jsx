@@ -54,7 +54,7 @@ const CartSidebar = ({ isOpen, toggleSidebar }) => {
         key: "rzp_test_cbyH4f86zT04hm",
         amount: res.data.order.amount,
         currency: res.data.order.currency,
-        name: "Acme Corp",
+        name: "Vijay kumar",
         description: "Test Transaction",
         image:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRHk5KmIOlDEE1jdShNCGvdVvvDyUvZpj4Bg&s",
@@ -80,9 +80,9 @@ const CartSidebar = ({ isOpen, toggleSidebar }) => {
           }
         },
         prefill: {
-          name: "Gaurav Kumar",
-          email: "gaurav.kumar@example.com",
-          contact: "9000090000",
+          name: "Vijay kumar",
+          email: "vm2218943@gmail.com",
+          contact: "7320037118",
         },
         notes: {
           address: "Razorpay Corporate Office",
