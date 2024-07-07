@@ -74,6 +74,7 @@ const CartSidebar = ({ isOpen, toggleSidebar }) => {
               }/api/product/payment-varification`,
               paymentData
             );
+
             navigate(`/success?payment_id=${response.razorpay_order_id}`);
           } catch (error) {
             console.error("Payment Verification Error:", error);
