@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { XCircleIcon } from "lucide-react";
-import { setRemoveCart } from "../redux/slicer";
+import { setRemoveCart, setUpdateQuantity } from "../redux/slicer";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const CartSidebar = ({ isOpen, toggleSidebar }) => {
   const selectorCart = useSelector((state) => state.store.cartProduct);
-  const totalPrice = selectorCart.reduce((acc, item) => acc + item.price, 0);
+  const totalPrice = selectorCart.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+
   const [quantities, setQuantities] = useState(
     selectorCart.reduce((acc, item) => {
       acc[item._id] = 1;
@@ -25,17 +29,17 @@ const CartSidebar = ({ isOpen, toggleSidebar }) => {
   };
 
   const incrementHandler = (item) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [item._id]: (prevQuantities[item._id] || 1) + 1,
-    }));
+    dispatch(
+      setUpdateQuantity({ _id: item._id, quantity: Number(item.quantity + 1) })
+    );
   };
 
   const decrementHandler = (item) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [item._id]: (prevQuantities[item._id] || 1) - 1,
-    }));
+    if (item.quantity > 1) {
+      dispatch(
+        setUpdateQuantity({ _id: item._id, quantity: item.quantity - 1 })
+      );
+    }
   };
 
   const checkoutHandler = async (amount, name) => {
@@ -133,21 +137,21 @@ const CartSidebar = ({ isOpen, toggleSidebar }) => {
                   <h1 className=" text-lg">{value.name}</h1>
                   <p className=" text-gray-500">{value.category}</p>
                   <p className=" text-green-700 font-semibold ">
-                    &#8377; {value.price}
+                    &#8377; {value.price * value.quantity}
                   </p>
                   <div className="flex gap-2 py-1 px-2 border justify-between w-[7rem] mt-1 rounded">
                     <button
                       onClick={() => decrementHandler(value)}
-                      disabled={quantities[value._id] === 1}
+                      disabled={value.quantity === 1}
                     >
                       -
                     </button>
-                    <p>{quantities[value._id]}</p>
+                    <p>{value.quantity}</p>
                     <button onClick={() => incrementHandler(value)}>+</button>
                   </div>
                   <div
                     onClick={() => removeItemHandler(value)}
-                    className=" hover:scale-110 transition-all absolute top-[-5px] right-[5px] text-red-700 cursor-pointer"
+                    className=" hover:scale-110 transition-all absolute top-[1px] right-[5px] text-red-700 cursor-pointer"
                   >
                     <XCircleIcon></XCircleIcon>
                   </div>

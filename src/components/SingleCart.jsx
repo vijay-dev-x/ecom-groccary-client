@@ -1,10 +1,12 @@
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { setCardProducts } from "../redux/slicer";
+import toast from "react-hot-toast";
 
 export default function SingleCart({ value }) {
   const dispatch = useDispatch();
   const cartHandler = (item) => {
+    toast.success("Added to cart");
     dispatch(setCardProducts(item));
   };
   return (
